@@ -12,6 +12,7 @@ namespace Elevator
         public ElevatorStatus CurrentStatus { get; private set; } = ElevatorStatus.STOPPED;
         public int CurrentFloor { get; private set; } = 1;
         public string ElevatorName { get; }
+       
         public enum ElevatorStatus
         {
             UP,
@@ -20,8 +21,9 @@ namespace Elevator
         }
 
         //Declaration
-        private bool[] destinationFloor;
+        private readonly bool[] destinationFloor;
         private readonly int topfloor;
+        private bool doorOpened;
 
         //Initiallization of an Elevator
         public Elevator(string elevator)
@@ -29,6 +31,7 @@ namespace Elevator
             destinationFloor = new bool[ElevatorController.Floor + 1];
             topfloor = ElevatorController.Floor;
             this.ElevatorName = elevator;
+            doorOpened = false;
         }
 
         
@@ -109,34 +112,23 @@ namespace Elevator
                 ElevatorController.StoppageGoingDown[floor] = false;
             }
 
+            if (ElevatorController.StoppageGoingUp[floor] || ElevatorController.StoppageGoingDown[floor])
+            {
+                SelectFloorNumber();
+                if (goingUp)
+                {
+                    ElevatorController.StoppageGoingUp[floor] = false;
+                }
+                else
+                {
+                    ElevatorController.StoppageGoingDown[floor] = false;
+                }
+            }
+
             destinationFloor[floor] = false;
             //Door is closing now
            CloseDoor();
 
-            void SelectFloorNumber()
-            {
-                Console.Write("Please press which floor you would like to go to : ");
-                var floorInput = Console.ReadLine();
-                int selectedFloor;
-                //TOdo: Need to implement exception handling though in real life there is no way to enter invalid floor no
-                if (Int32.TryParse(floorInput, out selectedFloor))
-                {
-                    if (selectedFloor > topfloor)
-                    {
-                        Console.WriteLine("We only have {0} floors", topfloor);
-                        return;
-                    }
-                    else
-                    {
-                        if (CurrentFloor == selectedFloor)
-                            StayPut();
-                        else
-                            destinationFloor[selectedFloor] = true;
-                    }
-                }
-                else
-                    Console.WriteLine("You have pressed an incorrect floor, Please try again");
-            }
         }
         private void StayPut()
         {
@@ -146,7 +138,7 @@ namespace Elevator
         {
             Console.WriteLine("{0} door is open now ....", ElevatorName);
             var doorOpenedAt = DateTime.Now;
-            bool doorOpened = true;
+            doorOpened = true;
             //Prarrel run of two method to check how long door is opened forcely and beep
             Parallel.Invoke(() => ForceKeppingDoorOpen(), () => BlowBeep(doorOpenedAt));
             void ForceKeppingDoorOpen()
@@ -188,6 +180,29 @@ namespace Elevator
             }
 
             return true;
+        }
+        private void SelectFloorNumber()
+        {
+            Console.Write("Please press which floor you would like to go to : ");
+            var floorInput = Console.ReadLine();
+            //TOdo: Need to implement exception handling though in real life there is no way to enter invalid floor no
+            if (int.TryParse(floorInput, out int selectedFloor))
+            {
+                if (selectedFloor > topfloor)
+                {
+                    Console.WriteLine("We only have {0} floors", topfloor);
+                    return;
+                }
+                else
+                {
+                    if (CurrentFloor == selectedFloor)
+                        StayPut();
+                    else
+                        destinationFloor[selectedFloor] = true;
+                }
+            }
+            else
+                Console.WriteLine("You have pressed an incorrect floor, Please try again");
         }
         private void CloseDoor()
         {

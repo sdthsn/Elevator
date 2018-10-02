@@ -21,7 +21,13 @@ namespace Elevator
                 Console.Write("Enter the floor you standing : ");
                 input = Console.ReadLine();
                 if (Int32.TryParse(input, out int floor))
-                    ElevatorController.CallButtonPress(floor, direction);
+                {
+                   if (ElevatorController.Floor >= floor) ElevatorController.CallButtonPress(floor, direction);
+                   else
+                    {
+                        Console.WriteLine("You have pressed an incorrect floor, Please try again in the next round");
+                    }
+                }
                 else if (input == EXIT)
                     Console.WriteLine("GoodBye!");
                 else

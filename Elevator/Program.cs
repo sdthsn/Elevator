@@ -45,7 +45,7 @@ namespace Elevator
             Console.ReadKey();
         }
 
-        #region helper methods
+        #region Helper methods
         private static Building Init()
         {
             Start:
@@ -77,7 +77,6 @@ namespace Elevator
                 }
                 return building;
         }
-
         static void StartOver()
         {
             Console.WriteLine("Wrong entry...");
