@@ -99,22 +99,22 @@ namespace Elevator
             CurrentFloor = floor;
             Console.WriteLine("{0} stopped at floor {1}", ElevatorName, floor);
             //Action while door is open
-            bool openDoorOperationCompleted = OpenDoor();
+            
 
-            if (goingUp && ElevatorController.StoppageGoingUp[floor])
-            {
-                SelectFloorNumber();
-                ElevatorController.StoppageGoingUp[floor] = false;
-            }
-            if (!goingUp && ElevatorController.StoppageGoingDown[floor])
-            {
-                SelectFloorNumber();
-                ElevatorController.StoppageGoingDown[floor] = false;
-            }
+            //if (goingUp && ElevatorController.StoppageGoingUp[floor])
+            //{
+            //    SelectFloorNumber();
+            //    ElevatorController.StoppageGoingUp[floor] = false;
+            //}
+            //if (!goingUp && ElevatorController.StoppageGoingDown[floor])
+            //{
+            //    SelectFloorNumber();
+            //    ElevatorController.StoppageGoingDown[floor] = false;
+            //}
 
             if (ElevatorController.StoppageGoingUp[floor] || ElevatorController.StoppageGoingDown[floor])
             {
-                SelectFloorNumber();
+                
                 if (goingUp)
                 {
                     ElevatorController.StoppageGoingUp[floor] = false;
@@ -123,9 +123,17 @@ namespace Elevator
                 {
                     ElevatorController.StoppageGoingDown[floor] = false;
                 }
+                bool openDoorOperationCompleted = OpenDoor();
+                Console.WriteLine("Opening Door....");
+                SelectFloorNumber();
+                destinationFloor[floor] = false;
             }
-
-            destinationFloor[floor] = false;
+            else
+            {
+                bool openDoorOperationCompleted = OpenDoor();
+                
+                destinationFloor[floor] = false;
+            }
             //Door is closing now
            CloseDoor();
 

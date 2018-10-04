@@ -4,10 +4,14 @@ namespace Elevator
     // This class is used to controll the Call from users from different floors and keep the requests Global and handle it by n number of elevator globally
     public static class ElevatorController
     {
-        public static int Floor { get; set; }
-        public static bool[] StoppageGoingUp { get; set; }
-        public static bool[] StoppageGoingDown { get; set; }
-        public static bool SwitchElevator { get; set; }
+        //public static int Floor { get; set; }
+        //public static  bool[] StoppageGoingUp { get; set; }
+        //public static bool[] StoppageGoingDown { get; set; }
+        //public static bool SwitchElevator { get; set; }
+        public volatile static int Floor;
+        public volatile static bool[] StoppageGoingUp;
+        public static volatile bool[] StoppageGoingDown;
+        public static volatile bool SwitchElevator;
 
 
         public static void  CreateStopages(int floor)
