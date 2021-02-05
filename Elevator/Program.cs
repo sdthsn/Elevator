@@ -48,6 +48,8 @@ namespace Elevator
         #region Helper methods
         private static Building Init()
         {
+
+            //jfhgvjfhgurhgjgh iufghduhgudyghudgfyureyf
             Start:
 
                 Building building = new Building();
